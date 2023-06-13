@@ -112,7 +112,7 @@ Furthermore, a new categorical variable called `completion_time_group` was deriv
 
 Before feeding the data into the machine learning model, a preprocessing step called label encoding is performed. Label encoding is used to convert categorical variables into unique numerical representations, enabling the model to process them effectively.
 
-The following fields with object data types underwent the label encoding process: cod_received, worker, id, branch_destination, status_label, receiver_city, detail_status_label, branch_origin, and completion_time_group.
+The following fields (furthermore will be referred as variables) with object data types underwent the label encoding process: cod_received, worker, id, branch_destination, status_label, receiver_city, detail_status_label, branch_origin, and completion_time_group.
 
 After underwent such process, the fields are transformed into numerical representations, as shown below:
 
@@ -124,33 +124,53 @@ Next, a correlation matrix is generated based on the processed data.
 
 ![Correlation Matrix](correlation_matrix.png)
 
-Based on the correlation matrix, certain variables shows a strong correlation, although some show weak corelation, but nonetheless i will select these variables for the machine learning model.
+Based on the correlation matrix, certain variables shows a relatively moderate correlation, although some show weak corelation, but nonetheless i will select these variables for the machine learning model.
 
 For Delivery Status Prediction, the fields `cod_received`, `detail_status_label`, and `completion_time` show correlations of 0.594, 0.411, and 0.307, respectively.
 
-For Completion Time Estimation, the variables `detail_status_label` and `status_label` show correlations of -0.124 and -0.219, respectively.
+For Completion Time Prediction, the variables `detail_status_label` and `status_label` show correlations of -0.124 and -0.219, respectively.
 
-I will be using both Support Vector Classification and Random Forest for the Delivery Status Prediction, and Random Forest for the Completion Time Estimation.
-All dataset will be split 70:30, meaning 70% dataset goes to the training set, and the rest 30% will be goes to the testing set.
+I will be using the Random Forest Classifier for both problems.
+The dataset will be split into a 7:3, meaning 70% dataset will be allocated to the training set, and the rest 30% will be allocated to the testing set.
 
-Both model and dataset will gone through GridSearchCV, for finding best parameter.
+Both model and dataset will undergo GridSearchCV, to find the most optimal parameter.
 
 ## Delivery Status Prediction
-### Support Vector Classification
 
 | Metric     | Train Score | Test Score |
 |------------|-------------|------------|
-| Accuracy   | 0.86        | 0.87       |
-| Precision  | 0.85        | 0.85       |
-| Recall     | 0.99        | 0.99       |
-| F1 Score   | 0.91        | 0.92       |
+| Accuracy   | 1.000       | 0.996       |
+| Precision  | 1.000        | 0.998       |
+| Recall     | 1.000       | 0.996     |
+| F1 Score   | 1.000        | 0.997       |
+
+This model performed well, the test score is near-perfect. These high scores can be attributed to the careful selection of variables that have moderately good correlations with the delivery status. By choosing the right variables, we were able to include important information thats significant.
+
+![Confusion Matrix](dsp_rfc_confusion_matrix.png)
+
+As for the confusion matrix, the model incorrectly predicted 3 data as successful delivery when they were actually a failed delivery, and 6 data as failed delivery when they were actually a succesful delivery. And these numbers are great, because we could confidently minimize unnecessary expenses and prioritized other task/delivery, as i have explained in the introduction.
 
 
-Accuracy (Train/Test): 0.86 / 0.87
-Precision (Train/Test): 0.85 / 0.85
-Recall (Train/Test): 0.99 / 0.99
-F1 Score (Train/Test): 0.91 / 0.92
 
+## Completion Time Prediction
+
+| Metric     | Train Score | Test Score |
+|------------|-------------|------------|
+| Accuracy   | 0.765       | 0.764       |
+| Precision  | 0.765        | 0.764       |
+| Recall     | 1.000       | 1.000     |
+| F1 Score   | 0.867        | 0.866       |
+
+It is important to note that the correlation coefficients for the variables `detail_status_label` and `status_label` are relatively weak, with values of -0.124 and -0.219, respectively. This suggests that these variables have a limited impact on predicting completion time and reflected in all these metrics.
+
+![Confusion Matrix](cte_rfc_confusion_matrix.png)
+
+It is interesting and worth mentioning, that this model successfully predicting 1734 data as positive ('within 2 hours') but it failed terribly predicting 536 data as negative ('over 2 hours').
+
+Overall, the Completion Time Prediction model shows acceptable performance, but could benefit from additional features that did not exist yet in this particular dataset. 
+
+# Conclusion
+In summary, the Delivery Status Prediction model demonstrated excellent performance, benefiting from the selected variables with moderate correlations. On the other hand, the Completion Time Prediction model showed acceptable but room for improvement results, with the need to explore more influential variables.
 
 
 
