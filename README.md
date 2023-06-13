@@ -1,6 +1,8 @@
 # MileApp
 
-## Fields
+## Introduction
+
+A brief description of the fields within the dataset can be seen below.
 
 | Field                    | Description                                  |
 |--------------------------|----------------------------------------------|
@@ -21,3 +23,55 @@
 | UserVar.branch_origin    | Branch code of the origin.                    |
 | UserVar.branch_dest      | Branch code of the destination.               |
 | UserVar.weight           | Weight of the package.                        |
+
+
+This is what the json structure looks like
+
+```json
+{
+    "taskLocationDone": {
+        "lon": 109.7629103,
+        "lat": -6.9266078
+    },
+    "taskCreatedTime": "2022-11-01 20:17:26 +0700",
+    "cod": {
+        "amount": 685000,
+        "received": true
+    },
+    "taskAssignedTo": "pacifiedLion0",
+    "taskCompletedTime": "2022-11-01 20:46:30 +0700",
+    "taskStatus": "done",
+    "flow": "Delivery",
+    "taskId": "4fe3b237c832ca4841a2",
+    "UserVar": {
+        "branch_dest": "SRG",
+        "taskStatusLabel": "Success",
+        "receiver_city": "BATANG ,KAB BATANG",
+        "taskDetailStatusLabel": "YANG BERSANGKUTAN",
+        "taskDetailStatus": "D01",
+        "weight": "13",
+        "branch_origin": "CGK",
+        "taskStatus": "COLF01"
+    }
+}
+```
+
+For easiness of analysis, i decided to flatten the data structures using [json-roller](https://github.com/xitiomet/json-roller).
+
+After it was flattened to .csv format, we can start exploring the data.
+
+Initially, the objective was to do a task completion time prediction, which is a regression problem. However, after carefully exploring the dataset, it appears that this dataset alone is not sufficient. I ended up performing a regression testing to confirm that i was right.
+
+Given the insights gained from the regression testing, it was determined that we should move to classification problems. The key question then became: what specific problem could be addressed based on the limited dataset available?
+
+
+1. Delivery Status Prediction. 
+
+This problem involves predicting whether a task will result in successful or failed delivery based on various contextual factors, which will be explained later in the Machine Learning section. By predicting the delivery status, we can help identify potential issues or delays in the delivery process. If optimized, this can lead to cost savings and better resource management.
+
+2. Completion Time Prediction. 
+
+This problem centers around accurately classifying tasks into two groups: those expected to be completed within two hours and those anticipated to take longer. By predicting the completion time, businesses can better assign tasks to workers based on their availability and efficiency. If optimized, we can ensure that tasks are allocated to workers who can complete them within the desired time frame, thereby ensuring compliance with the predefined Service Level Agreement, such as "delivery within 2 hours" SLA.
+
+## Data Cleaning
+
