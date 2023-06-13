@@ -1,8 +1,10 @@
 # MileApp
 
-## Introduction
+# Introduction
 
 A brief description of the fields within the dataset can be seen below.
+
+<div align="center">
 
 | Field                    | Description                                  |
 |--------------------------|----------------------------------------------|
@@ -24,6 +26,7 @@ A brief description of the fields within the dataset can be seen below.
 | UserVar.branch_dest      | Branch code of the destination.               |
 | UserVar.weight           | Weight of the package.                        |
 
+</div>
 
 The json structure can be seen below.
 
@@ -73,7 +76,7 @@ This problem involves predicting whether a task will result in successful or fai
 
 This problem centers around accurately classifying tasks into two groups: those expected to be completed within two hours and those anticipated to take longer. By predicting the completion time, businesses can better assign tasks to workers based on their availability and efficiency. If optimized, we can ensure that tasks are allocated to workers who can complete them within the desired time frame, thereby ensuring compliance with the predefined Service Level Agreement, such as "delivery within 2 hours" SLA.
 
-## Data Exploration and Cleaning
+# Data Exploration and Cleaning
 
 I began by using `data.info()` to display the dataset summary. Mainly for looking at the field datatypes and looking whether theres a null value or not. To complement, `data.isnull().sum()` was also used.
 
@@ -81,6 +84,7 @@ Then i proceed by using both `data.head()` and `data.tail()` for verifying that 
 
 For convenient, i decided to rename the dataset.
 
+<div align="center">
 
 | Original Field Name       | Renamed Field Name |
 |--------------------------|--------------------|
@@ -102,13 +106,15 @@ For convenient, i decided to rename the dataset.
 | UserVar.branch_dest      | branch_destination |
 | UserVar.weight           | weight             |
 
+</div>
+
 The data preprocessing steps included dropping the variables `flow` and `task_status` as they had only one unique value, indicating they provided no useful information. Similarly, the variables `detail_status` and `status` were dropped as they were redundant, with their information already captured in `detail_status_label` and `status_label` respectively.
 
 A new variable named 'completion_time' was created by calculating the time difference between `task_completed_time` and `task_created_time`. This variable captures the duration it took for a task to be completed.
 
 Furthermore, a new categorical variable called `completion_time_group` was derived from `completion_time`. This variable classifies the completion time into two groups: 'within 2 hours' and 'over 2 hours'. This binning process helps to categorize tasks based on their completion time, providing a simplified view of task durations.
 
-## Machine Learning
+# Machine Learning
 
 Before feeding the data into the machine learning model, a preprocessing step called label encoding is performed. Label encoding is used to convert categorical variables into unique numerical representations, enabling the model to process them effectively.
 
@@ -122,7 +128,9 @@ After underwent such process, the fields are transformed into numerical represen
 
 Next, a correlation matrix is generated based on the processed data.
 
-![Correlation Matrix](correlation_matrix.png)
+<div align="center">
+    <img src="correlation_matrix.png" alt="Correlation Matrix">
+</div>
 
 Based on the correlation matrix, certain variables shows a relatively moderate correlation, although some show weak corelation, but nonetheless i will select these variables for the machine learning model.
 
@@ -137,6 +145,8 @@ Both model and dataset will undergo GridSearchCV, to find the most optimal param
 
 ## Delivery Status Prediction
 
+<div align="center">
+
 | Metric     | Train Score | Test Score |
 |------------|-------------|------------|
 | Accuracy   | 1.000       | 0.996       |
@@ -144,15 +154,19 @@ Both model and dataset will undergo GridSearchCV, to find the most optimal param
 | Recall     | 1.000       | 0.996     |
 | F1 Score   | 1.000        | 0.997       |
 
+</div>
+
 This model performed well, the test score is near-perfect. These high scores can be attributed to the careful selection of variables that have moderately good correlations with the delivery status. By choosing the right variables, we were able to include important information thats significant.
 
-![Confusion Matrix](dsp_rfc_confusion_matrix.png)
+<div align="center">
+    <img src="dsp_rfc_confusion_matrix.png" alt="Confusion Matrix">
+</div>
 
 As for the confusion matrix, the model incorrectly predicted 3 data as successful delivery when they were actually a failed delivery, and 6 data as failed delivery when they were actually a succesful delivery. And these numbers are great, because we could confidently minimize unnecessary expenses and prioritized other task/delivery, as i have explained in the introduction.
 
-
-
 ## Completion Time Prediction
+
+<div align="center">
 
 | Metric     | Train Score | Test Score |
 |------------|-------------|------------|
@@ -161,9 +175,14 @@ As for the confusion matrix, the model incorrectly predicted 3 data as successfu
 | Recall     | 1.000       | 1.000     |
 | F1 Score   | 0.867        | 0.866       |
 
+</div>
+
 It is important to note that the correlation coefficients for the variables `detail_status_label` and `status_label` are relatively weak, with values of -0.124 and -0.219, respectively. This suggests that these variables have a limited impact on predicting completion time and reflected in all these metrics.
 
-![Confusion Matrix](cte_rfc_confusion_matrix.png)
+<div align="center">
+    <img src="cte_rfc_confusion_matrix.png" alt="Confusion Matrix">
+</div>
+
 
 It is interesting and worth mentioning, that this model successfully predicting 1734 data as positive ('within 2 hours') but it failed terribly predicting 536 data as negative ('over 2 hours').
 
