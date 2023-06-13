@@ -56,7 +56,7 @@ This is what the json structure looks like
 }
 ```
 
-For easiness of analysis, i decided to flatten the data structures using [json-roller](https://github.com/xitiomet/json-roller).
+For ease of analysis, i decided to flatten the data structure using [json-roller](https://github.com/xitiomet/json-roller).
 
 After it was flattened to .csv format, we can start exploring the data.
 
@@ -73,5 +73,90 @@ This problem involves predicting whether a task will result in successful or fai
 
 This problem centers around accurately classifying tasks into two groups: those expected to be completed within two hours and those anticipated to take longer. By predicting the completion time, businesses can better assign tasks to workers based on their availability and efficiency. If optimized, we can ensure that tasks are allocated to workers who can complete them within the desired time frame, thereby ensuring compliance with the predefined Service Level Agreement, such as "delivery within 2 hours" SLA.
 
-## Data Cleaning
+## Data Exploration and Cleaning
+
+I began by using `data.info()` to display the dataset summary. Mainly for looking at the field datatypes and looking whether theres a null value or not. To complement, `data.isnull().sum()` was also used.
+
+Then i proceed by using both `data.head()` and `data.tail()` for verifying that the data has been processed correctly by [json-roller](https://github.com/xitiomet/json-roller).
+
+For convenient, i decided to rename the dataset.
+
+
+| Original Field Name       | Renamed Field Name |
+|--------------------------|--------------------|
+| taskId                   | id                 |
+| taskCreatedTime          | task_created_time  |
+| taskCompletedTime        | task_completed_time|
+| taskAssignedTo           | worker             |
+| taskLocationDone         | location_done      |
+| flow                     | flow               |
+| cod                      | cod                |
+| cod.amount               | cod_amount         |
+| cod.received             | cod_received       |
+| UserVar                  | user_var           |
+| UserVar.taskStatus       | status_code        |
+| UserVar.taskStatusLabel | status_label       |
+| UserVar.taskDetailStatus | detail_status_code |
+| UserVar.taskDetailStatusLabel | detail_status_label|
+| UserVar.branch_origin    | branch_origin      |
+| UserVar.branch_dest      | branch_destination |
+| UserVar.weight           | weight             |
+
+The data preprocessing steps included dropping the variables `flow` and `task_status` as they had only one unique value, indicating they provided no useful information. Similarly, the variables `detail_status` and `status` were dropped as they were redundant, with their information already captured in `detail_status_label` and `status_label` respectively.
+
+A new variable named 'completion_time' was created by calculating the time difference between `task_completed_time` and `task_created_time`. This variable captures the duration it took for a task to be completed.
+
+Furthermore, a new categorical variable called `completion_time_group` was derived from `completion_time`. This variable classifies the completion time into two groups: 'within 2 hours' and 'over 2 hours'. This binning process helps to categorize tasks based on their completion time, providing a simplified view of task durations.
+
+## Machine Learning
+
+Before feeding the data into the machine learning model, a preprocessing step called label encoding is performed. Label encoding is used to convert categorical variables into unique numerical representations, enabling the model to process them effectively.
+
+The following fields with object data types underwent the label encoding process: cod_received, worker, id, branch_destination, status_label, receiver_city, detail_status_label, branch_origin, and completion_time_group.
+
+After underwent such process, the fields are transformed into numerical representations, as shown below:
+
+| cod_received | worker | id   | branch_destination | status_label | receiver_city | detail_status_label | branch_origin | completion_time_group |
+|--------------|--------|------|--------------------|--------------|---------------|---------------------|---------------|-----------------------|
+| 1            | 1843   | 2403 | 50                 | 1            | 137           | 30                  | 12            | 1                     |
+
+Next, a correlation matrix is generated based on the processed data.
+
+![Correlation Matrix](correlation_matrix.png)
+
+Based on the correlation matrix, certain variables shows a strong correlation, although some show weak corelation, but nonetheless i will select these variables for the machine learning model.
+
+For Delivery Status Prediction, the fields `cod_received`, `detail_status_label`, and `completion_time` show correlations of 0.594, 0.411, and 0.307, respectively.
+
+For Completion Time Estimation, the variables `detail_status_label` and `status_label` show correlations of -0.124 and -0.219, respectively.
+
+I will be using both Support Vector Classification and Random Forest for the Delivery Status Prediction, and Random Forest for the Completion Time Estimation.
+All dataset will be split 70:30, meaning 70% dataset goes to the training set, and the rest 30% will be goes to the testing set.
+
+Both model and dataset will gone through GridSearchCV, for finding best parameter.
+
+## Delivery Status Prediction
+### Support Vector Classification
+
+| Metric     | Train Score | Test Score |
+|------------|-------------|------------|
+| Accuracy   | 0.86        | 0.87       |
+| Precision  | 0.85        | 0.85       |
+| Recall     | 0.99        | 0.99       |
+| F1 Score   | 0.91        | 0.92       |
+
+
+Accuracy (Train/Test): 0.86 / 0.87
+Precision (Train/Test): 0.85 / 0.85
+Recall (Train/Test): 0.99 / 0.99
+F1 Score (Train/Test): 0.91 / 0.92
+
+
+
+
+
+
+
+
+Refer to [Jupyter Notebook](https://github.com/rizkilaks/mileapp/blob/main/data_svm_clean.ipynb) for more technical stuff.
 
