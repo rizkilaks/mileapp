@@ -162,7 +162,7 @@ This model performed well, the test score is near-perfect. These high scores can
     <img src="dsp_rfc_confusion_matrix.png" alt="Confusion Matrix">
 </div>
 
-As for the confusion matrix, the model incorrectly predicted 3 data as successful delivery when they were actually a failed delivery, and 6 data as failed delivery when they were actually a succesful delivery. And these numbers are great, because we could confidently minimize unnecessary expenses and prioritized other task/delivery, as i have explained in the introduction.
+As for the confusion matrix, the model incorrectly predicted 3 data as successful delivery when they were actually a failed delivery, and 6 data as failed delivery when they were actually a succesful delivery. And these numbers are great, because we can confidently minimize unnecessary expenses and prioritized other task/delivery, as i have explained in the introduction.
 
 ## Completion Time Prediction
 
@@ -177,16 +177,16 @@ As for the confusion matrix, the model incorrectly predicted 3 data as successfu
 
 </div>
 
-It is important to note that the correlation coefficients for the variables `detail_status_label` and `status_label` are relatively weak, with values of -0.124 and -0.219, respectively. This suggests that these variables have a limited impact on predicting completion time and reflected in all these metrics.
+It is important to note that the correlation coefficients for the variables `detail_status_label` and `status_label` are relatively weak, with values of -0.124 and -0.219, respectively. This suggests that these variables have a limited impact on predicting completion time and is reflected in all of these metrics.
 
 <div align="center">
     <img src="cte_rfc_confusion_matrix.png" alt="Confusion Matrix">
 </div>
 
 
-It is interesting and worth mentioning, that this model successfully predicting 1734 data as positive ('within 2 hours') but it failed terribly predicting 536 data as negative ('over 2 hours').
+It is interesting and worth mentioning, that this model successfully predict 1734 data as positive ('within 2 hours') but it failed to predict 536 data as negative ('over 2 hours').
 
-Overall, the Completion Time Prediction model shows acceptable performance, but could benefit from additional features that did not exist yet in this particular dataset. 
+Overall, the Completion Time Prediction model shows acceptable performance, but could benefit from additional features that are not yet exist in this particular dataset. 
 
 # Conclusion
 In summary, the Delivery Status Prediction model demonstrated excellent performance, benefiting from the selected variables with moderate correlations. On the other hand, the Completion Time Prediction model showed acceptable but room for improvement results, with the need to explore more influential variables.
