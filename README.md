@@ -25,7 +25,7 @@ A brief description of the fields within the dataset can be seen below.
 | UserVar.weight           | Weight of the package.                        |
 
 
-This is what the json structure looks like
+The json structure can be seen below.
 
 ```json
 {
@@ -112,7 +112,7 @@ Furthermore, a new categorical variable called `completion_time_group` was deriv
 
 Before feeding the data into the machine learning model, a preprocessing step called label encoding is performed. Label encoding is used to convert categorical variables into unique numerical representations, enabling the model to process them effectively.
 
-The following fields (furthermore will be referred as variables) with object data types underwent the label encoding process: cod_received, worker, id, branch_destination, status_label, receiver_city, detail_status_label, branch_origin, and completion_time_group.
+The following fields (furthermore will be referred as variables) with object data types underwent the label encoding process: `cod_received`, `worker`, `id`, `branch_destination`, `status_label`, `receiver_city`, `detail_status_label`, `branch_origin`, and `completion_time_group`.
 
 After underwent such process, the fields are transformed into numerical representations, as shown below:
 
@@ -173,10 +173,7 @@ Overall, the Completion Time Prediction model shows acceptable performance, but 
 In summary, the Delivery Status Prediction model demonstrated excellent performance, benefiting from the selected variables with moderate correlations. On the other hand, the Completion Time Prediction model showed acceptable but room for improvement results, with the need to explore more influential variables.
 
 
-
-
-
-
+---
 
 Refer to [Jupyter Notebook](https://github.com/rizkilaks/mileapp/blob/main/data_svm_clean.ipynb) for more technical stuff.
 
